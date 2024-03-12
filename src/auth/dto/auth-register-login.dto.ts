@@ -12,6 +12,5 @@ export class AuthRegisterLoginDto {
   password: string;
 
   @ApiProperty({ example: 'John' })
-  @IsNotEmpty()
   name: string;
 }

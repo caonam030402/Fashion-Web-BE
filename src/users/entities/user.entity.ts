@@ -1,12 +1,14 @@
 import {
   BeforeInsert,
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Role } from 'src/roles/role.entity';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Entity()
 export class User {
@@ -27,6 +29,12 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 
   @BeforeInsert()
   async hashPassword() {

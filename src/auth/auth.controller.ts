@@ -9,9 +9,16 @@ import { successResponse } from 'src/common/utils/data-return';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
-  @Post()
+
+  @Post('/register')
   async register(@Body() dto: AuthRegisterLoginDto) {
     const user = await this.authService.register(dto);
-    return successResponse('Register success !', user);
+    return successResponse('Register success!', user);
+  }
+
+  @Post('/login')
+  async login(@Body() dto: AuthRegisterLoginDto) {
+    const user = await this.authService.login(dto);
+    return successResponse('Register success!', user);
   }
 }

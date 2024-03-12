@@ -1,4 +1,4 @@
-import { Role } from 'src/roles/role.entity';
+import { Role } from 'src/roles/entities/role.entity';
 import { User } from 'src/users/entities/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 

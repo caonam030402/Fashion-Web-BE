@@ -1,8 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EntityCondition } from 'src/common/types/entity-condition.type';
+import { errorResponse } from 'src/common/utils/data-return';
 
 enum FieldUnique {
   EMAIL = 'email',
@@ -11,7 +13,7 @@ enum FieldUnique {
 }
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
@@ -28,13 +30,7 @@ export class UserService {
     }
 
     if (user) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNPROCESSABLE_ENTITY,
-          message: ['Field already exists'],
-        },
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Field already exists');
     }
   }
 
@@ -46,5 +42,14 @@ export class UserService {
 
     const user = await this.userRepo.create(createUserDto);
     return this.userRepo.save(user);
+  }
+
+  async findOne(fields: EntityCondition<User>) {
+    const findOptions: FindOptionsWhere<User> = {};
+
+    Object.keys(fields).forEach((key) => {
+      findOptions[key] = fields[key];
+    });
+    return this.userRepo.findOne({ where: findOptions });
   }
 }

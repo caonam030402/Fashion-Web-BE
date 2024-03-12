@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UserModule } from 'src/users/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModules } from 'src/users/users.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
-    UserModule,
+    UsersModules,
     PassportModule,
     JwtModule.register({
       secret: process.env.ACCESS_TOKEN_SECRET,
