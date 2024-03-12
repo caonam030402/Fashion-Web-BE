@@ -1,4 +1,4 @@
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/entities/user.entity';
 import { SuccessResponse } from './utils.type';
 
 export type AuthResponse = SuccessResponse<{

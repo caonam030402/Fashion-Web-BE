@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import { RoleDto } from 'src/roles/dto/role.dto';
+import { RoleDto } from 'src/modules/roles/dto/role.dto';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'caonam@example.com' })

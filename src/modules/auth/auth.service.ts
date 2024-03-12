@@ -1,9 +1,9 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { errorResponse } from 'src/common/utils/data-return';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/entities/user.entity';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {
