@@ -1,21 +1,14 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Product } from './product.entity';
 
 @Entity()
 export class Size {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
   @Column({ nullable: false })
   size: string;
 
-  // @OneToMany((type) => Product, (product) => product.sizes)
-  // products: Product[];
+  @ManyToMany(() => Product, (product) => product.sizes)
+  products: Product[];
 }

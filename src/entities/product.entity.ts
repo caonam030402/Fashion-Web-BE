@@ -6,7 +6,6 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -20,44 +19,45 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false })
+  @Column()
   name: string;
 
-  @Column({ nullable: false })
+  @Column()
   quantity: string;
 
-  @Column({ nullable: false })
+  @Column()
   price: number;
 
-  @Column({ nullable: false })
+  @Column()
   price_before_discount: number;
 
-  @Column({ nullable: false })
+  @Column()
   image: string;
 
-  @Column({ type: 'simple-array', nullable: false })
+  @Column({ type: 'simple-array' })
   images: string[];
 
-  @Column({ nullable: false })
+  @Column()
   sold: number;
 
-  @Column({ nullable: false })
+  @Column()
   description: string;
 
-  // @ManyToOne(() => Size, (size) => size.products)
-  // sizes: Size[];
-
-  // @ManyToOne((type) => Color, (color) => color.products)
-  // colors: Color[];
+  @Column()
+  material: string;
 
   @Column({ name: 'category_id' })
   categoryId: string;
 
   @Column({ name: 'category_children' })
-  categoryChildrenId: string;
+  categoryChildId: string;
 
   @Column({ name: 'color_id' })
   colorId: string;
+
+  @ManyToOne((type) => Color, (color) => color.product)
+  @JoinColumn({ name: 'color_id' })
+  color: Product;
 
   @ManyToOne((type) => Category, (category) => category.product)
   @JoinColumn({ name: 'category_id' })
@@ -68,38 +68,27 @@ export class Product {
     (categoryChildren) => categoryChildren.products,
   )
   @JoinColumn({ name: 'category_children' })
-  categoryChildrens: CategoryChildren;
+  categoryChild: CategoryChildren;
 
-  @ManyToOne((type) => Color, (color) => color.product)
-  @JoinColumn({ name: 'color_id' })
-  color: Product;
-
-  @Column({ nullable: false })
-  material: string;
+  @ManyToMany(() => Size, (size) => size.products)
+  @JoinTable({
+    name: 'product_by_size',
+    joinColumn: {
+      name: 'product_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'product_by_size_product_id',
+    },
+    inverseJoinColumn: {
+      name: 'size_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'product_by_size_size_id',
+    },
+  })
+  sizes: Size[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  // @ManyToMany(() => Color, { cascade: true })
-  // @JoinTable({
-  //   name: 'product_group_by_color',
-  //   joinColumn: {
-  //     name: 'product_id',
-  //     referencedColumnName: 'id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'color_id',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
-  // colors: Color[];
-
-  // @ManyToMany(
-  //   () => ProductGroupByColor,
-  //   (productGroupByColor) => productGroupByColor.products,
-  // )
-  // productGroupByColor: Product[];
 }

@@ -4,6 +4,9 @@ import { FieldRepo } from './enums/field-repo';
 import { CreateCategoryChildDto } from './dto/create-category-children.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { CreateColorDto } from './dto/create-color.dto';
+import { CreateProductDto } from './dto/create-product.dto';
+import { createSizeDto } from './dto/create-size.dto';
 
 @ApiTags('Product')
 @Controller('products')
@@ -11,19 +14,19 @@ export class ProductsController {
   constructor(private productService: ProductsService) {}
 
   @Get('')
-  getAllProduct() {
-    const products = this.productService.getAll(FieldRepo.CATEGORY);
+  getAllProducts() {
+    const products = this.productService.getAll(FieldRepo.PRODUCT);
     return products;
   }
 
   @Get('category')
-  getAllCategory() {
+  getAllCategorys() {
     const categories = this.productService.getAll(FieldRepo.CATEGORY);
     return categories;
   }
 
   @Post('')
-  createProducts(@Body() dto) {
+  createProducts(@Body() dto: CreateProductDto) {
     const products = this.productService.create(dto, FieldRepo.PRODUCT);
     return products;
   }
@@ -41,5 +44,17 @@ export class ProductsController {
       FieldRepo.CATEGORY_CHILDREN,
     );
     return categoryClothes;
+  }
+
+  @Post('colors')
+  createColors(@Body() dto: CreateColorDto) {
+    const colors = this.productService.create(dto, FieldRepo.COLOR);
+    return colors;
+  }
+
+  @Post('sizes')
+  createSizes(@Body() dto: createSizeDto) {
+    const sizes = this.productService.create(dto, FieldRepo.SIZE);
+    return sizes;
   }
 }

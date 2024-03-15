@@ -1,12 +1,10 @@
 import {
   Column,
-  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Category } from './product-category.entity';
@@ -32,6 +30,6 @@ export class CategoryChildren {
   @JoinColumn({ name: 'category_id' })
   category: Category;
 
-  @OneToMany((type) => Product, (product) => product.categoryChildrens)
+  @OneToMany((type) => Product, (product) => product.categoryChild)
   products: Product[];
 }

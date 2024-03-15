@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { Transform } from 'class-transformer';
+import { IsEmail, MinLength } from 'class-validator';
 
 export class AuthRegisterLoginDto {
   @ApiProperty({ example: 'test1@example.com' })
