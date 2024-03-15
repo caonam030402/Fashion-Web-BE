@@ -1,3 +1,9 @@
+import { CategoryChildren } from 'src/entities/product-category-children';
+
+import { Category } from 'src/entities/product-category.entity';
+import { Color } from 'src/entities/product-color.entity';
+import { Size } from 'src/entities/product-size.entity';
+import { Product } from 'src/entities/product.entity';
 import { Role } from 'src/entities/role.entity';
 import { User } from 'src/entities/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
@@ -9,7 +15,7 @@ const config: PostgresConnectionOptions = {
   port: 5432,
   username: 'caonam',
   password: 'namnam',
-  entities: [User, Role],
+  entities: [User, Role, Product, Size, Category, Color, CategoryChildren],
   synchronize: true,
 };
 
