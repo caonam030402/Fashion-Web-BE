@@ -1,5 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Product } from './product.entity';
+import { ProductGroup } from './product-group.entity';
 
 @Entity()
 export class Color {
@@ -14,4 +23,7 @@ export class Color {
 
   @OneToMany((type) => Product, (product) => product.color)
   product: Product;
+
+  @ManyToMany((type) => Product, (product) => product.colorVariations)
+  products: Product[];
 }

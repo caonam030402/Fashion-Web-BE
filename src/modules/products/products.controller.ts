@@ -25,20 +25,37 @@ export class ProductsController {
     return categories;
   }
 
+  @Get('group')
+  getAllProductGroup() {
+    const groupByColor = this.productService.getAll(
+      FieldRepo.PRODUCT_GROUP_BY_COLOR,
+    );
+    return groupByColor;
+  }
+
   @Post('')
-  createProducts(@Body() dto: CreateProductDto) {
+  createProducts(@Body() dto) {
     const products = this.productService.create(dto, FieldRepo.PRODUCT);
     return products;
   }
 
+  @Post('group')
+  createProductGroup(@Body() dto) {
+    const products = this.productService.create(
+      dto,
+      FieldRepo.PRODUCT_GROUP_BY_COLOR,
+    );
+    return products;
+  }
+
   @Post('category')
-  createCategories(@Body() dto: CreateCategoryDto) {
+  createCategories(@Body() dto: CreateCategoryDto[]) {
     const categories = this.productService.create(dto, FieldRepo.CATEGORY);
     return categories;
   }
 
   @Post('category-children')
-  createCategoryClothes(@Body() dto: CreateCategoryChildDto) {
+  createCategoryClothes(@Body() dto: CreateCategoryChildDto[]) {
     const categoryClothes = this.productService.create(
       dto,
       FieldRepo.CATEGORY_CHILDREN,
@@ -47,13 +64,13 @@ export class ProductsController {
   }
 
   @Post('colors')
-  createColors(@Body() dto: CreateColorDto) {
+  createColors(@Body() dto: CreateColorDto[]) {
     const colors = this.productService.create(dto, FieldRepo.COLOR);
     return colors;
   }
 
   @Post('sizes')
-  createSizes(@Body() dto: createSizeDto) {
+  createSizes(@Body() dto: createSizeDto[]) {
     const sizes = this.productService.create(dto, FieldRepo.SIZE);
     return sizes;
   }

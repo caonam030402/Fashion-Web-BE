@@ -8,6 +8,8 @@ import { Category } from 'src/entities/product-category.entity';
 import { CategoryChildren } from 'src/entities/product-category-children';
 import { Color } from 'src/entities/product-color.entity';
 import { Size } from 'src/entities/product-size.entity';
+import { groupBy } from 'rxjs';
+import { ProductGroup } from 'src/entities/product-group.entity';
 
 @Module({
   imports: [
@@ -17,6 +19,7 @@ import { Size } from 'src/entities/product-size.entity';
       CategoryChildren,
       Color,
       Size,
+      ProductGroup,
     ]),
   ],
   controllers: [ProductsController],

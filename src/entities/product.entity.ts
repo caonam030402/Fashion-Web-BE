@@ -13,6 +13,7 @@ import { Size } from './product-size.entity';
 import { Color } from './product-color.entity';
 import { Category } from './product-category.entity';
 import { CategoryChildren } from './product-category-children';
+import { ProductGroup } from './product-group.entity';
 
 @Entity()
 export class Product {
@@ -30,9 +31,6 @@ export class Product {
 
   @Column()
   price_before_discount: number;
-
-  @Column()
-  image: string;
 
   @Column({ type: 'simple-array' })
   images: string[];
@@ -55,9 +53,32 @@ export class Product {
   @Column({ name: 'color_id' })
   colorId: string;
 
+  @Column({ name: 'product_group_id' })
+  productGroupId: string;
+
+  @ManyToMany(() => Color, (color) => color.products)
+  @JoinTable({
+    name: 'product-color',
+    joinColumn: {
+      name: 'product_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'product-color_product_id',
+    },
+    inverseJoinColumn: {
+      name: 'color_id',
+      referencedColumnName: 'id',
+      foreignKeyConstraintName: 'product-color_color_id',
+    },
+  })
+  colorVariations: Color[];
+
   @ManyToOne((type) => Color, (color) => color.product)
   @JoinColumn({ name: 'color_id' })
   color: Product;
+
+  @ManyToOne((type) => ProductGroup, (productGroup) => productGroup.products)
+  @JoinColumn({ name: 'product_group_id' })
+  productGroup: ProductGroup;
 
   @ManyToOne((type) => Category, (category) => category.product)
   @JoinColumn({ name: 'category_id' })

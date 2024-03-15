@@ -9,6 +9,10 @@ import { Color } from 'src/entities/product-color.entity';
 import { Size } from 'src/entities/product-size.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateCategoryDto } from './dto/create-category.dto';
+import { ProductGroup } from 'src/entities/product-group.entity';
+import { CreateCategoryChildDto } from './dto/create-category-children.dto';
+import { CreateColorDto } from './dto/create-color.dto';
+import { createSizeDto } from './dto/create-size.dto';
 
 @Injectable()
 export class ProductsService {
@@ -27,6 +31,9 @@ export class ProductsService {
 
     @InjectRepository(Color)
     private readonly colorRepo: Repository<Color>,
+
+    @InjectRepository(ProductGroup)
+    private readonly ProductGroupRepo: Repository<ProductGroup>,
   ) {}
   async getAll(field: FieldRepo) {
     let datas;
@@ -46,6 +53,15 @@ export class ProductsService {
           color: true,
           categories: true,
           categoryChild: true,
+          colorVariations: true,
+        },
+      });
+    }
+
+    if (field === FieldRepo.PRODUCT_GROUP_BY_COLOR) {
+      datas = await this.ProductGroupRepo.find({
+        relations: {
+          // products: true,
         },
       });
     }
@@ -68,12 +84,21 @@ export class ProductsService {
     }
 
     if (field === FieldRepo.PRODUCT) {
-      const product = this.productRepo.create({
-        ...dto,
-        sizes: dto.sizeIds.map((sizeId) => ({ id: sizeId })),
-      });
+      const productList = await Promise.all(
+        dto.map(async (dto) => {
+          return this.productRepo.create({
+            ...dto,
+            colorVariations: Array.isArray(dto.colorVariationIds)
+              ? dto.colorVariationIds.map((colorId) => ({ id: colorId }))
+              : [],
+            sizes: Array.isArray(dto.sizeIds)
+              ? dto.sizeIds.map((sizeId) => ({ id: sizeId }))
+              : [],
+          });
+        }),
+      );
 
-      datas = await this.productRepo.save(product);
+      datas = await this.productRepo.save(productList);
     }
 
     if (field === FieldRepo.COLOR) {
@@ -84,6 +109,11 @@ export class ProductsService {
     if (field === FieldRepo.SIZE) {
       datas = this.sizeRepo.create(dto);
       await this.sizeRepo.save(datas);
+    }
+
+    if (field === FieldRepo.PRODUCT_GROUP_BY_COLOR) {
+      datas = this.ProductGroupRepo.create(dto);
+      await this.ProductGroupRepo.save(datas);
     }
 
     return datas;
