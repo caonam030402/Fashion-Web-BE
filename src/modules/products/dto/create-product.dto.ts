@@ -2,19 +2,22 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsInt, IsNumber, IsString } from 'class-validator';
 
 export class CreateProductDto {
-  @ApiProperty({ example: 'LT 01 Premium Suede Court Blueberry' })
+  @ApiProperty({
+    example: 'LT 01 Premium Suede Court Blueberry',
+    isArray: true,
+  })
   @IsString()
   name: string;
 
-  @ApiProperty({ example: 11 })
+  @ApiProperty({ example: 11, isArray: true })
   @IsNumber()
   quantity: number;
 
-  @ApiProperty({ example: 20 })
+  @ApiProperty({ example: 20, isArray: true })
   @IsNumber()
   price: number;
 
-  @ApiProperty({ example: 15 })
+  @ApiProperty({ example: 15, isArray: true })
   @IsNumber()
   price_before_discount: number;
 
@@ -57,18 +60,18 @@ export class CreateProductDto {
   @IsInt()
   categoryChildId: number;
 
-  // @ApiProperty({
-  //   example: 10,
-  // })
-  // @IsInt()
-  // colorId: number;
+  @ApiProperty({
+    example: 10,
+  })
+  @IsInt()
+  colorId: number;
 
-  // @ApiProperty({
-  //   example: [1, 2, 3, 4, 5, 6, 7, 8],
-  // })
-  // @IsArray()
-  // @IsInt({ each: true })
-  // colorVariationIds: number[];
+  @ApiProperty({
+    example: [1, 2, 3, 4, 5, 6, 7, 8],
+  })
+  @IsArray()
+  @IsInt({ each: true })
+  colorVariationIds: number[];
 
   @ApiProperty({
     example: [1, 2, 3, 4, 5, 6, 7, 8],

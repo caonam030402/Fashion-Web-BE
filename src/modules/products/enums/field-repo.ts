@@ -4,5 +4,5 @@ export enum FieldRepo {
   PRODUCT = 'product',
   COLOR = 'color',
   SIZE = 'size',
-  PRODUCT_GROUP_BY_COLOR = 'product_group_by_color',
+  PRODUCT_GROUP = 'product_group',
 }

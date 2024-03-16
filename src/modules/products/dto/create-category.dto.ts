@@ -1,8 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsEmail, IsNotEmpty, IsOptional, MinLength } from 'class-validator';
-import { Product } from 'src/entities/product.entity';
-import { RoleDto } from 'src/modules/roles/dto/role.dto';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateCategoryDto {
   @ApiProperty({ example: 'Footwear' })
