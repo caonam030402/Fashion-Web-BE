@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { FieldRepo } from './enums/field-repo';
 import { CreateCategoryChildDto } from './dto/create-category-children.dto';
@@ -14,6 +14,12 @@ import { CreateProductGroupDto } from './dto/create-product-group.dto';
 @Controller('products')
 export class ProductsController {
   constructor(private productService: ProductsService) {}
+
+  @Get(':id')
+  getProductById(@Param('id') id: string) {
+    const products = this.productService.getById(id, FieldRepo.PRODUCT);
+    return products;
+  }
 
   @Get('')
   @ApiQuery({ type: QueryProductDto, required: false })

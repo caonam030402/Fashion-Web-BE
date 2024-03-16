@@ -160,4 +160,23 @@ export class ProductsService {
 
     return datas;
   }
+
+  async getById(id: string, field: FieldRepo) {
+    let data;
+    if (field === FieldRepo.PRODUCT) {
+      data = await this.productRepo.findOne({
+        relations: {
+          category: true,
+          color: true,
+          productGroup: true,
+          colorVariations: true,
+          sizes: true,
+        },
+        where: {
+          id,
+        },
+      });
+    }
+    return data;
+  }
 }
