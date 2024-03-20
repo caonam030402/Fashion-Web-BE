@@ -1,8 +1,9 @@
-import { CategoryChildren } from 'src/entities/product-category-children';
+import { Category } from 'src/entities/product-category';
+import { Collection } from 'src/entities/product-collection.entity';
 
-import { Category } from 'src/entities/product-category.entity';
 import { Color } from 'src/entities/product-color.entity';
 import { ProductGroup } from 'src/entities/product-group.entity';
+import { Material } from 'src/entities/product-material';
 import { Size } from 'src/entities/product-size.entity';
 import { Product } from 'src/entities/product.entity';
 import { Role } from 'src/entities/role.entity';
@@ -21,10 +22,11 @@ const config: PostgresConnectionOptions = {
     Role,
     Product,
     Size,
-    Category,
+    Collection,
     Color,
-    CategoryChildren,
+    Category,
     ProductGroup,
+    Material,
   ],
   synchronize: true,
 };

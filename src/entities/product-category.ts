@@ -7,10 +7,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
-import { Category } from './product-category.entity';
+import { Collection } from './product-collection.entity';
 
 @Entity()
-export class CategoryChildren {
+export class Category {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,10 +26,10 @@ export class CategoryChildren {
   @Column({ name: 'category_id' })
   categoryId: string;
 
-  @ManyToOne((type) => Category, (category) => category.children)
+  @ManyToOne((type) => Collection, (collection) => collection.children)
   @JoinColumn({ name: 'category_id' })
-  category: Category;
+  collection: Collection;
 
-  @OneToMany((type) => Product, (product) => product.categoryChild)
+  @OneToMany((type) => Product, (product) => product.category)
   products: Product[];
 }

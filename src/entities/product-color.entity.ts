@@ -1,14 +1,11 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToMany,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
-import { ProductGroup } from './product-group.entity';
 
 @Entity()
 export class Color {

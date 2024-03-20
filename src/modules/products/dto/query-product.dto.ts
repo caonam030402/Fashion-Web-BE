@@ -8,7 +8,7 @@ export class QueryProductDto {
   size?: string;
 
   @ApiProperty({ example: 'price' })
-  sortBy?: string;
+  sortBy?: 'price' | 'new_in' | 'most_wanted';
 
   @ApiProperty({ example: 'desc' })
   order?: string;

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
-export class CreateCategoryChildDto {
+export class CreateCategory {
   @ApiProperty({ example: 'Footwear' })
   @IsNotEmpty()
   name: string;

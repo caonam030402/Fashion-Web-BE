@@ -1,29 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from 'src/entities/product-category.entity';
 import { Product } from 'src/entities/product.entity';
 import { Brackets, Repository } from 'typeorm';
 import { FieldRepo } from './enums/field-repo';
-import { CategoryChildren } from 'src/entities/product-category-children';
+import { Category } from 'src/entities/product-category';
 import { Color } from 'src/entities/product-color.entity';
 import { Size } from 'src/entities/product-size.entity';
-import { CreateCategoryDto } from './dto/create-category.dto';
 import { ProductGroup } from 'src/entities/product-group.entity';
 
 import { QueryProductDto } from './dto/query-product.dto';
 import { Sort } from './enums/sort-by';
+import { Material } from 'src/entities/product-material';
+import { Collection } from 'src/entities/product-collection.entity';
+import { CreateCollection } from './dto/create-collection.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectRepository(Category)
-    private readonly categoryRepo: Repository<Category>,
+    @InjectRepository(Collection)
+    private readonly collectionRepo: Repository<Collection>,
 
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
 
-    @InjectRepository(CategoryChildren)
-    private readonly categoryChildrenRepo: Repository<CategoryChildren>,
+    @InjectRepository(Category)
+    private readonly categoryRepo: Repository<Category>,
+
+    @InjectRepository(Material)
+    private readonly materialRepo: Repository<Material>,
 
     @InjectRepository(Size)
     private readonly sizeRepo: Repository<Size>,
@@ -35,23 +39,54 @@ export class ProductsService {
     private readonly ProductGroupRepo: Repository<ProductGroup>,
   ) {}
 
-  async getAll(field: FieldRepo, dto?: QueryProductDto) {
+  async getAll(field: FieldRepo, dto?: QueryProductDto, param?: string) {
     let datas;
 
     //GET CATEGORY
-    if (field === FieldRepo.CATEGORY) {
-      datas = await this.categoryRepo.find({
+    if (field === FieldRepo.COLLECTION) {
+      datas = await this.collectionRepo.find({
         relations: {
           children: true,
         },
       });
     }
 
+    //GET CATEGORY PARAM
+    if (field === FieldRepo.CATEGORY && param != undefined) {
+      datas = await this.categoryRepo.find({
+        where: { collection: { name: param } },
+      });
+    }
+
+    //GET SUBSECTION OF PRODUCT
+    if (field === FieldRepo.COLOR) {
+      const sizes = await this.sizeRepo.find({
+        relations: { collection: true },
+      });
+      const colors = await this.colorRepo.find({});
+      const materials = await this.materialRepo.find({});
+
+      datas = {
+        colors,
+        sizes,
+        materials,
+      };
+    }
+
+    // //GET SUBSECTION OF PRODUCT
+    // if (field === FieldRepo.COLOR && FieldRepo.SIZE && FieldRepo.MATERIAL) {
+    //   datas = await this.collectionRepo.find({
+    //     relations: {
+    //       children: true,
+    //     },
+    //   });
+    // }
+
     //GET AND QUERY PRODUCT
     if (field === FieldRepo.PRODUCT) {
       const { color, size, sortBy, order, search } = dto;
 
-      const orderBy = order.toUpperCase() as 'ASC' | 'DESC';
+      const orderBy = order as 'ASC' | 'DESC';
 
       const queryBuilder = this.productRepo.createQueryBuilder('product');
 
@@ -62,10 +97,39 @@ export class ProductsService {
           price: orderBy,
         });
 
+      //SortBy Mostwanted
+      sortBy &&
+        sortBy === Sort.MOST_WANTED &&
+        queryBuilder.orderBy({
+          sold: 'DESC',
+        });
+
+      //New In
+      sortBy &&
+        sortBy === Sort.MOST_WANTED &&
+        queryBuilder.orderBy({
+          sold: 'DESC',
+        });
+
+      //New In
+      sortBy &&
+        sortBy === Sort.NEW_IN &&
+        queryBuilder.orderBy({
+          created_at: 'DESC',
+        });
+
       // SortBy Color - Size
       color &&
-        queryBuilder.where('color.name = :colorName', { colorName: color });
+        queryBuilder.where('color.name = :colorName', {
+          colorName: color,
+        });
+
       size && queryBuilder.andWhere('size.size IN (:size)', { size });
+
+      param &&
+        queryBuilder.andWhere('collection.name IN (:names)', {
+          names: param,
+        });
 
       // Search name - category
       search &&
@@ -74,10 +138,10 @@ export class ProductsService {
             qb.where('LOWER(product.name) LIKE LOWER(:search)', {
               search: `%${search}%`,
             });
-            qb.orWhere('LOWER(category.name) LIKE LOWER(:search)', {
+            qb.orWhere('LOWER(collection.name) LIKE LOWER(:search)', {
               search: `%${search}%`,
             });
-            qb.orWhere('LOWER(categoryChild.name) LIKE LOWER(:search)', {
+            qb.orWhere('LOWER(category.name) LIKE LOWER(:search)', {
               search: `%${search}%`,
             });
           }),
@@ -86,14 +150,14 @@ export class ProductsService {
       datas = await queryBuilder
         .innerJoinAndSelect('product.color', 'color')
         .innerJoinAndSelect('product.sizes', 'size')
+        .innerJoinAndSelect('product.collection', 'collection')
         .innerJoinAndSelect('product.category', 'category')
-        .innerJoinAndSelect('product.categoryChild', 'categoryChild')
         .innerJoinAndSelect('product.colorVariations', 'colorVariations')
         .innerJoinAndSelect('product.productGroup', 'productGroup')
+        .innerJoinAndSelect('product.material', 'material')
         .getMany();
     }
 
-    //GET CATEGORY
     if (field === FieldRepo.PRODUCT_GROUP) {
       datas = await this.ProductGroupRepo.find({
         relations: {
@@ -108,17 +172,23 @@ export class ProductsService {
   async create(dto, field: FieldRepo) {
     let datas;
 
+    //CREATE COLLECTION
+    if (field === FieldRepo.COLLECTION) {
+      const categoryDto = dto as CreateCollection;
+      datas = this.collectionRepo.create(categoryDto);
+      await this.collectionRepo.save(datas);
+    }
+
     //CREATE CATEGORY
     if (field === FieldRepo.CATEGORY) {
-      const categoryDto = dto as CreateCategoryDto;
-      datas = this.categoryRepo.create(categoryDto);
+      datas = this.categoryRepo.create(dto);
       await this.categoryRepo.save(datas);
     }
 
-    //CREATE CATEGORY CHILD
-    if (field === FieldRepo.CATEGORY_CHILDREN) {
-      datas = this.categoryChildrenRepo.create(dto);
-      await this.categoryChildrenRepo.save(datas);
+    //CREATE MATERIAL
+    if (field === FieldRepo.MATERIAL) {
+      datas = this.materialRepo.create(dto);
+      await this.materialRepo.save(datas);
     }
 
     //CREATE PRODUCT
@@ -166,17 +236,21 @@ export class ProductsService {
     if (field === FieldRepo.PRODUCT) {
       data = await this.productRepo.findOne({
         relations: {
-          category: true,
+          collection: true,
           color: true,
-          productGroup: true,
+          productGroup: {
+            products: {
+              material: true,
+            },
+          },
           colorVariations: true,
           sizes: true,
+          material: true,
         },
         where: {
           id,
         },
       });
     }
-    return data;
   }
 }

@@ -43,10 +43,10 @@ export class CreateProductDto {
   description: string;
 
   @ApiProperty({
-    example: 'Premium Suede',
+    example: 1,
   })
-  @IsString()
-  material: string;
+  @IsInt()
+  materialId: number;
 
   @ApiProperty({
     example: 1,

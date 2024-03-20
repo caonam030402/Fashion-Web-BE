@@ -11,9 +11,10 @@ import {
 } from 'typeorm';
 import { Size } from './product-size.entity';
 import { Color } from './product-color.entity';
-import { Category } from './product-category.entity';
-import { CategoryChildren } from './product-category-children';
+import { Collection } from './product-collection.entity';
+import { Category } from './product-category';
 import { ProductGroup } from './product-group.entity';
+import { Material } from './product-material';
 
 @Entity()
 export class Product {
@@ -41,19 +42,19 @@ export class Product {
   @Column()
   description: string;
 
-  @Column()
-  material: string;
+  @Column({ name: 'material_id', select: false })
+  materialId: string;
 
-  @Column({ name: 'category_id' })
+  @Column({ name: 'collection_id', select: false })
+  collectionId: string;
+
+  @Column({ name: 'category', select: false })
   categoryId: string;
 
-  @Column({ name: 'category_children' })
-  categoryChildId: string;
-
-  @Column({ name: 'color_id' })
+  @Column({ name: 'color_id', select: false })
   colorId: string;
 
-  @Column({ name: 'product_group_id' })
+  @Column({ name: 'product_group_id', select: false })
   productGroupId: string;
 
   @ManyToMany(() => Color, (color) => color.products)
@@ -80,16 +81,17 @@ export class Product {
   @JoinColumn({ name: 'product_group_id' })
   productGroup: ProductGroup;
 
-  @ManyToOne((type) => Category, (category) => category.product)
-  @JoinColumn({ name: 'category_id' })
-  categories: Category;
+  @ManyToOne((type) => Collection, (collection) => collection.product)
+  @JoinColumn({ name: 'collection_id' })
+  collection: Collection;
 
-  @ManyToOne(
-    (type) => CategoryChildren,
-    (categoryChildren) => categoryChildren.products,
-  )
-  @JoinColumn({ name: 'category_children' })
-  categoryChild: CategoryChildren;
+  @ManyToOne((type) => Material, (material) => material.product)
+  @JoinColumn({ name: 'material_id' })
+  material: Material;
+
+  @ManyToOne((type) => Category, (category) => category.products)
+  @JoinColumn({ name: 'category' })
+  category: Category;
 
   @ManyToMany(() => Size, (size) => size.products)
   @JoinTable({
@@ -107,9 +109,9 @@ export class Product {
   })
   sizes: Size[];
 
-  @CreateDateColumn({ type: 'timestamp' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp' })
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
 }
