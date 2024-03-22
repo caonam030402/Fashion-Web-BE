@@ -4,14 +4,22 @@ import { errorResponse } from 'src/common/utils/data-return';
 import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from '../users/users.service';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(User) private readonly userRepo: Repository<User>,
     private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
+
   async register(dto: AuthRegisterLoginDto) {
+    const email = await this.usersService.findOne({ email: dto.email });
+
     const user = await this.usersService.create({
       ...dto,
       role: { id: 2 },
@@ -24,15 +32,21 @@ export class AuthService {
     return omitSensitiveInfo(user);
   }
 
-  async login(dto: AuthRegisterLoginDto) {
+  async login(dto: AuthRegisterLoginDto, res: Response) {
     const user = await this.usersService.findOne({ email: dto.email });
 
     if (!user) {
-      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Email wrong');
+      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Error', {
+        email: 'Email wrong',
+      });
     }
 
-    if (!(user.password === dto.password)) {
-      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Password wrong');
+    const isPassword = await bcrypt.compare(dto.password, user.password);
+
+    if (!isPassword) {
+      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Error', {
+        password: 'Password wrong',
+      });
     }
 
     const tokens = await this.generateToken(user.id.toString(), user.name);
@@ -41,6 +55,9 @@ export class AuthService {
       const { password, phone_number, ...userData } = user;
       return userData;
     };
+
+    res.cookie('access_token', tokens.accessToken, { httpOnly: true });
+    res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
 
     return {
       user: omitSensitiveInfo(user),

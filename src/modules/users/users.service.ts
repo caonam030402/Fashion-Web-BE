@@ -19,25 +19,31 @@ export class UsersService {
   ) {}
 
   async validationUnique(field: FieldUnique, value: string): Promise<void> {
-    let user;
-
     if (field === FieldUnique.EMAIL) {
-      user = await this.userRepo.findOne({ where: { email: value } });
+      const user = await this.userRepo.findOne({ where: { email: value } });
+      if (user) {
+        errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Field already exists', {
+          email: 'Email đã tồn tại',
+        });
+      }
     } else if (field === FieldUnique.PHONE_NUMBER) {
-      user = await this.userRepo.findOne({ where: { phone_number: value } });
+      const user = await this.userRepo.findOne({
+        where: { phone_number: value },
+      });
     } else if (field === FieldUnique.NAME) {
-      user = await this.userRepo.findOne({ where: { name: value } });
-    }
-
-    if (user) {
-      errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Field already exists');
+      const user = await this.userRepo.findOne({ where: { name: value } });
+      if (user) {
+        errorResponse(HttpStatus.UNPROCESSABLE_ENTITY, 'Field already exists', {
+          name: 'Tên đã tồn tại',
+        });
+      }
     }
   }
 
   async create(createUserDto: CreateUserDto) {
     await Promise.all([
-      this.validationUnique(FieldUnique.NAME, createUserDto.name),
       this.validationUnique(FieldUnique.EMAIL, createUserDto.email),
+      this.validationUnique(FieldUnique.NAME, createUserDto.name),
     ]);
 
     const user = await this.userRepo.create(createUserDto);

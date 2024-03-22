@@ -40,4 +40,8 @@ export class User {
   async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
+
+  async comparePassword(user: User) {
+    return await bcrypt.compare(this.password, user.password);
+  }
 }

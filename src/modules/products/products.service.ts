@@ -73,15 +73,6 @@ export class ProductsService {
       };
     }
 
-    // //GET SUBSECTION OF PRODUCT
-    // if (field === FieldRepo.COLOR && FieldRepo.SIZE && FieldRepo.MATERIAL) {
-    //   datas = await this.collectionRepo.find({
-    //     relations: {
-    //       children: true,
-    //     },
-    //   });
-    // }
-
     //GET AND QUERY PRODUCT
     if (field === FieldRepo.PRODUCT) {
       const { color, size, sortBy, order, search } = dto;
@@ -252,5 +243,7 @@ export class ProductsService {
         },
       });
     }
+
+    return data;
   }
 }

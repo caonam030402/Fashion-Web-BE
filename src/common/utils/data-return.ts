@@ -9,11 +9,16 @@ export const successResponse = <T>(message: string, data: dataType<T>) => {
   };
 };
 
-export const errorResponse = <T>(status: HttpStatus, message: string) => {
+export const errorResponse = <T>(
+  status: HttpStatus,
+  message: string,
+  data?: T,
+) => {
   throw new HttpException(
     {
       status: status,
-      message: [message],
+      message: message,
+      data: data,
     },
     status,
   );
