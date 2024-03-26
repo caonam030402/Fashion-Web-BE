@@ -4,11 +4,13 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/modules/roles/entities/role.entity';
+import { Order } from 'src/modules/oders/entities/order.entity';
 
 @Entity()
 export class User {
@@ -29,6 +31,9 @@ export class User {
 
   @ManyToOne(() => Role, (role) => role.users)
   role: Role;
+
+  @OneToMany((type) => Order, (order) => order.user)
+  orders: Order[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

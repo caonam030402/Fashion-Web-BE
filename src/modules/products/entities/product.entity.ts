@@ -6,6 +6,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,6 +16,8 @@ import { Collection } from './product-collection.entity';
 import { Category } from './product-category';
 import { ProductGroup } from './product-group.entity';
 import { Material } from './product-material';
+import { OrderDetail } from 'src/modules/oders/entities/order-detail.entity';
+import { Order } from 'src/modules/oders/entities/order.entity';
 
 @Entity()
 export class Product {
@@ -72,6 +75,9 @@ export class Product {
     },
   })
   colorVariations: Color[];
+
+  @OneToMany((type) => OrderDetail, (orderDetail) => orderDetail.product)
+  ordersDetail: OrderDetail[];
 
   @ManyToOne((type) => Color, (color) => color.product)
   @JoinColumn({ name: 'color_id' })
