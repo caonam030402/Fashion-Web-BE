@@ -4,14 +4,18 @@ import { Order } from './entities/order.entity';
 import { In, Repository } from 'typeorm';
 import { OrderDetail } from './entities/order-detail.entity';
 import { CreateOrderDto } from './dto/create-order';
-import { successResponse } from 'src/common/utils/data-return';
+import { errorResponse, successResponse } from 'src/common/utils/data-return';
 import { BuyProductDto } from './dto/buy-product';
 import { OrderStatus } from './entities/order-status.entity';
 import { StatusOrder } from './enums/status';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class OrdersService {
   constructor(
+    private jwtService: JwtService,
+
     @InjectRepository(Order)
     private readonly orderRepo: Repository<Order>,
 
@@ -52,6 +56,31 @@ export class OrdersService {
   async createStatusOrder(dto) {
     const orderStatus = await this.orderStatusRepo.save(dto);
     return successResponse('Thêm trạng thái đơn hàng thành công', orderStatus);
+  }
+
+  async getOrder(status, request: Request) {
+    const access_token =
+      request.cookies['access_token'] &&
+      request.cookies['access_token'].split(' ')[1];
+
+    if (!access_token) {
+      errorResponse(404, 'Vui lòng đăng nhập');
+    }
+
+    const decoded = this.jwtService.decode(access_token);
+    const order = await this.orderRepo.find({
+      where: {
+        userId: decoded.id,
+        orderDetails: {
+          statusId: status,
+        },
+      },
+      relations: {
+        orderDetails: true,
+      },
+    });
+
+    return successResponse('Lấy order thành công', order);
   }
 
   async buyProduct(dto: BuyProductDto[]) {

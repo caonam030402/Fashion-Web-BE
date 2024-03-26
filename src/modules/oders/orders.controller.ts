@@ -1,9 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Req } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order';
 import { BuyProductDto } from './dto/buy-product';
+import { StatusOrder } from './enums/status';
+import { Request } from 'express';
 
-@Controller('oders')
+@Controller('orders')
 export class OrdersController {
   constructor(private ordersService: OrdersService) {}
 
@@ -22,6 +24,12 @@ export class OrdersController {
   @Post('/buy-product')
   buyProduct(@Body() body: BuyProductDto[]) {
     const res = this.ordersService.buyProduct(body);
+    return res;
+  }
+
+  @Get('/status/:id')
+  getOrder(@Param('id') status: StatusOrder, @Req() request: Request) {
+    const res = this.ordersService.getOrder(status, request);
     return res;
   }
 }
