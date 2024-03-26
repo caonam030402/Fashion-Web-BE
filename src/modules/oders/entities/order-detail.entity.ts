@@ -14,6 +14,9 @@ export class OrderDetail {
   id: string;
 
   @Column()
+  status: number;
+
+  @Column()
   price: number;
 
   @Column()

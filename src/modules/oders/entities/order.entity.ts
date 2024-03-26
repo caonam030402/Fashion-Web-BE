@@ -17,9 +17,6 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  status: number;
-
   @Column({ name: 'user_id' })
   userId: string;
 

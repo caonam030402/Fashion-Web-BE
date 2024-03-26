@@ -1,20 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, MinLength } from 'class-validator';
 
-export class CreateOrderDto {
+export class BuyProductDto {
   @ApiProperty({ example: 'Footwear' })
   @IsNotEmpty()
-  productId: string;
+  orderDetailId: string;
 
   @ApiProperty({ example: 1 })
   @IsNotEmpty()
   userId: string;
-
-  @IsNotEmpty()
-  buy_count: number;
-
-  status: number;
-
-  @IsNotEmpty()
-  price: number;
 }

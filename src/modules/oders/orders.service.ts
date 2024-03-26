@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { OrderDetail } from './entities/order-detail.entity';
-import { CreateOrder } from './dto/create-order';
+import { CreateOrderDto } from './dto/create-order';
 import { successResponse } from 'src/common/utils/data-return';
+import { BuyProductDto } from './dto/buy-product';
 
 @Injectable()
 export class OrdersService {
@@ -16,31 +17,46 @@ export class OrdersService {
     private readonly orderDetailRepo: Repository<OrderDetail>,
   ) {}
 
-  async addToCart(dto: CreateOrder) {
-    const { buyCount, price, productId, userId } = dto;
-
-    const findOder = await this.orderRepo.findOne({
-      where: { userId: userId, status: 1 },
-      relations: { orderDetails: true },
+  async addToCart(dto: CreateOrderDto) {
+    const { userId } = dto;
+    const findOrderForUser = await this.orderRepo.findOne({
+      where: { userId: userId },
     });
 
     let order: Order;
-    if (!findOder) {
-      order = this.orderRepo.create({
-        userId: userId,
-        status: 1,
-      });
 
-      order = await this.orderRepo.save(order);
+    //Check xem user đã có đơn hàng chưa nếu chưa thì tạo đơn hàng của user
+    if (!findOrderForUser) {
+      const orderCreate = this.orderRepo.create({
+        userId: userId,
+      });
+      order = await this.orderRepo.save(orderCreate);
     }
 
-    const orderDetail = this.orderDetailRepo.create({
-      buy_count: buyCount,
-      price: price,
-      productId: productId,
-      orderId: findOder ? findOder.id : order.id,
+    const orderDetailCreate = this.orderDetailRepo.create({
+      orderId: findOrderForUser ? findOrderForUser.id : order.id,
+      status: 1,
+      ...dto,
     });
 
-    return successResponse('Thêm sản phẩm thành công', orderDetail);
+    const orderDetail = this.orderDetailRepo.save(orderDetailCreate);
+
+    return orderDetail;
+  }
+
+  async buyProduct(dto: BuyProductDto[]) {
+    const orderDetailIds = dto.map((item) => item.orderDetailId);
+
+    const orderDetailsToUpdate = await this.orderDetailRepo
+      .createQueryBuilder()
+      .update(OrderDetail)
+      .set({ status: 2 })
+      .where('id IN (:...orderDetailIds)', { orderDetailIds })
+      .execute();
+
+    return successResponse(
+      `Mua ${orderDetailsToUpdate.affected} sản phẩm thành công`,
+      undefined,
+    );
   }
 }
