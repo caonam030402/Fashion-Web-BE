@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from 'src/entities/product.entity';
+import { Product } from 'src/modules/products/entities/product.entity';
 import { Brackets, Repository } from 'typeorm';
 import { FieldRepo } from './enums/field-repo';
-import { Category } from 'src/entities/product-category';
-import { Color } from 'src/entities/product-color.entity';
-import { Size } from 'src/entities/product-size.entity';
-import { ProductGroup } from 'src/entities/product-group.entity';
+import { Category } from 'src/modules/products/entities/product-category';
+import { Color } from 'src/modules/products/entities/product-color.entity';
+import { Size } from 'src/modules/products/entities/product-size.entity';
+import { ProductGroup } from 'src/modules/products/entities/product-group.entity';
 
 import { QueryProductDto } from './dto/query-product.dto';
 import { Sort } from './enums/sort-by';
-import { Material } from 'src/entities/product-material';
-import { Collection } from 'src/entities/product-collection.entity';
+import { Material } from 'src/modules/products/entities/product-material';
+import { Collection } from 'src/modules/products/entities/product-collection.entity';
 import { CreateCollection } from './dto/create-collection.dto';
 
 @Injectable()

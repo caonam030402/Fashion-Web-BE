@@ -1,13 +1,13 @@
-import { Category } from 'src/entities/product-category';
-import { Collection } from 'src/entities/product-collection.entity';
+import { Category } from 'src/modules/products/entities/product-category';
+import { Collection } from 'src/modules/products/entities/product-collection.entity';
 
-import { Color } from 'src/entities/product-color.entity';
-import { ProductGroup } from 'src/entities/product-group.entity';
-import { Material } from 'src/entities/product-material';
-import { Size } from 'src/entities/product-size.entity';
-import { Product } from 'src/entities/product.entity';
-import { Role } from 'src/entities/role.entity';
-import { User } from 'src/entities/user.entity';
+import { Color } from 'src/modules/products/entities/product-color.entity';
+import { ProductGroup } from 'src/modules/products/entities/product-group.entity';
+import { Material } from 'src/modules/products/entities/product-material';
+import { Size } from 'src/modules/products/entities/product-size.entity';
+import { Product } from 'src/modules/products/entities/product.entity';
+import { Role } from 'src/modules/roles/entities/role.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 const config: PostgresConnectionOptions = {

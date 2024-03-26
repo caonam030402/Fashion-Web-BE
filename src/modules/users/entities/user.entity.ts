@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Role } from 'src/entities/role.entity';
+import { Role } from 'src/modules/roles/entities/role.entity';
 
 @Entity()
 export class User {

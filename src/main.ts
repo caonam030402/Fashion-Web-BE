@@ -5,7 +5,7 @@ import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: ['http://localhost:3000', 'https://etq-amsterdam.vercel.app'],
   credentials: true,
 };
 
@@ -25,7 +25,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.enableCors(corsOptions);
   app.use(cookieParser());
-  await app.listen(3000);
+  await app.listen(3001);
 
   console.log(`Application is running on: ${await app.getUrl()}`);
 }

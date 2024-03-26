@@ -1,10 +1,12 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { User } from 'src/entities/user.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { FindOptionsWhere, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityCondition } from 'src/common/types/entity-condition.type';
-import { errorResponse } from 'src/common/utils/data-return';
+import { errorResponse, successResponse } from 'src/common/utils/data-return';
+import { Request } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 enum FieldUnique {
   EMAIL = 'email',
@@ -15,6 +17,7 @@ enum FieldUnique {
 @Injectable()
 export class UsersService {
   constructor(
+    private jwtService: JwtService,
     @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
 
@@ -57,5 +60,30 @@ export class UsersService {
       findOptions[key] = fields[key];
     });
     return this.userRepo.findOne({ where: findOptions });
+  }
+
+  async findWithAccessToken(request: Request) {
+    const access_token =
+      request.cookies['access_token'] &&
+      request.cookies['access_token'].split(' ')[1];
+
+    if (!access_token) {
+      errorResponse(404, 'Vui lòng đăng nhập');
+    }
+
+    const decoded = this.jwtService.decode(access_token);
+    const user = await this.userRepo.findOne({
+      where: { id: decoded.sub },
+    });
+
+    const omitSensitiveInfo = (user: User) => {
+      const { password, ...userData } = user;
+      return userData;
+    };
+
+    return successResponse(
+      'Lấy người dùng thành công',
+      omitSensitiveInfo(user),
+    );
   }
 }
