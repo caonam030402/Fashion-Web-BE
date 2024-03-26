@@ -7,8 +7,7 @@ import { UsersModules } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { JwtModule } from '@nestjs/jwt';
-import { OdersModule } from './oders/oders.module';
-import { OdersController } from './oders/oders.controller';
+import { OrdersModule } from './modules/oders/orders.module';
 
 @Module({
   imports: [
@@ -22,9 +21,9 @@ import { OdersController } from './oders/oders.controller';
       secret: process.env.ACCESS_TOKEN_SECRET,
       signOptions: { expiresIn: '60s' },
     }),
-    OdersModule,
+    OrdersModule,
   ],
-  controllers: [OdersController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

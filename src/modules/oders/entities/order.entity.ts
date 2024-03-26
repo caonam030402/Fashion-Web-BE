@@ -21,7 +21,7 @@ export class Order {
   status: number;
 
   @Column({ name: 'user_id' })
-  userId: number;
+  userId: string;
 
   @OneToMany((type) => OrderDetail, (orderDetail) => orderDetail.order)
   orderDetails: OrderDetail[];

@@ -17,7 +17,6 @@ import { Category } from './product-category';
 import { ProductGroup } from './product-group.entity';
 import { Material } from './product-material';
 import { OrderDetail } from 'src/modules/oders/entities/order-detail.entity';
-import { Order } from 'src/modules/oders/entities/order.entity';
 
 @Entity()
 export class Product {

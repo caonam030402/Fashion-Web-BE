@@ -20,10 +20,10 @@ export class OrderDetail {
   buy_count: number;
 
   @Column({ name: 'product_id' })
-  productId: number;
+  productId: string;
 
   @Column({ name: 'order_id' })
-  orderId: number;
+  orderId: string;
 
   @ManyToOne((type) => Product, (user) => user.ordersDetail)
   @JoinColumn({ name: 'product_id' })
