@@ -1,4 +1,5 @@
 import { OrderDetail } from 'src/modules/oders/entities/order-detail.entity';
+import { OrderStatus } from 'src/modules/oders/entities/order-status.entity';
 import { Order } from 'src/modules/oders/entities/order.entity';
 import { Category } from 'src/modules/products/entities/product-category';
 import { Collection } from 'src/modules/products/entities/product-collection.entity';
@@ -31,6 +32,7 @@ const config: PostgresConnectionOptions = {
     Material,
     OrderDetail,
     Order,
+    OrderStatus,
   ],
   synchronize: true,
 };

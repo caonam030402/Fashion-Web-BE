@@ -13,6 +13,12 @@ export class OrdersController {
     return res;
   }
 
+  @Post('/status')
+  createStatus(@Body() body) {
+    const res = this.ordersService.createStatusOrder(body);
+    return res;
+  }
+
   @Post('/buy-product')
   buyProduct(@Body() body: BuyProductDto[]) {
     const res = this.ordersService.buyProduct(body);

@@ -6,6 +6,8 @@ import { OrderDetail } from './entities/order-detail.entity';
 import { CreateOrderDto } from './dto/create-order';
 import { successResponse } from 'src/common/utils/data-return';
 import { BuyProductDto } from './dto/buy-product';
+import { OrderStatus } from './entities/order-status.entity';
+import { StatusOrder } from './enums/status';
 
 @Injectable()
 export class OrdersService {
@@ -15,6 +17,9 @@ export class OrdersService {
 
     @InjectRepository(OrderDetail)
     private readonly orderDetailRepo: Repository<OrderDetail>,
+
+    @InjectRepository(OrderStatus)
+    private readonly orderStatusRepo: Repository<OrderStatus>,
   ) {}
 
   async addToCart(dto: CreateOrderDto) {
@@ -35,7 +40,7 @@ export class OrdersService {
 
     const orderDetailCreate = this.orderDetailRepo.create({
       orderId: findOrderForUser ? findOrderForUser.id : order.id,
-      status: 1,
+      statusId: StatusOrder.IN_CART,
       ...dto,
     });
 
@@ -44,13 +49,18 @@ export class OrdersService {
     return orderDetail;
   }
 
+  async createStatusOrder(dto) {
+    const orderStatus = await this.orderStatusRepo.save(dto);
+    return successResponse('Thêm trạng thái đơn hàng thành công', orderStatus);
+  }
+
   async buyProduct(dto: BuyProductDto[]) {
     const orderDetailIds = dto.map((item) => item.orderDetailId);
 
     const orderDetailsToUpdate = await this.orderDetailRepo
       .createQueryBuilder()
       .update(OrderDetail)
-      .set({ status: 2 })
+      .set({ statusId: StatusOrder.WAIT_FOR_CONFIRMATION })
       .where('id IN (:...orderDetailIds)', { orderDetailIds })
       .execute();
 

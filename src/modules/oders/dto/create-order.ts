@@ -13,7 +13,7 @@ export class CreateOrderDto {
   @IsNotEmpty()
   buy_count: number;
 
-  status: number;
+  statusId: number;
 
   @IsNotEmpty()
   price: number;
