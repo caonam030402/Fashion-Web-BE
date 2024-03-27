@@ -4,10 +4,12 @@ import {
   JoinColumn,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Product } from './product.entity';
 import { Collection } from './product-collection.entity';
+import { OrderDetail } from 'src/modules/oders/entities/order-detail.entity';
 
 @Entity()
 export class Size {
@@ -26,4 +28,7 @@ export class Size {
   @ManyToOne((type) => Collection, (collection) => collection.sizes)
   @JoinColumn({ name: 'collection_id' })
   collection: Collection;
+
+  @OneToMany((type) => OrderDetail, (orderDetail) => orderDetail.size)
+  ordersDetail: OrderDetail[];
 }

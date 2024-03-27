@@ -56,8 +56,16 @@ export class AuthService {
       return userData;
     };
 
-    res.cookie('access_token', tokens.accessToken, { httpOnly: true });
-    res.cookie('refresh_token', tokens.refreshToken, { httpOnly: true });
+    res.cookie('access_token', tokens.accessToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
+    res.cookie('refresh_token', tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    });
 
     return {
       user: omitSensitiveInfo(user),

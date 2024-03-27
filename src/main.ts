@@ -7,6 +7,7 @@ import * as cookieParser from 'cookie-parser';
 const corsOptions = {
   origin: ['http://localhost:3000', 'https://etq-amsterdam.vercel.app'],
   credentials: true,
+  secure: true,
 };
 
 async function bootstrap() {

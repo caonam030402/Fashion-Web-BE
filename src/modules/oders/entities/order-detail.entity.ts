@@ -1,13 +1,16 @@
 import { Product } from 'src/modules/products/entities/product.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Order } from './order.entity';
 import { OrderStatus } from './order-status.entity';
+import { Size } from 'src/modules/products/entities/product-size.entity';
 
 @Entity()
 export class OrderDetail {
@@ -29,6 +32,9 @@ export class OrderDetail {
   @Column({ name: 'status_id' })
   statusId: number;
 
+  @Column({ name: 'size_id' })
+  sizeId: number;
+
   @ManyToOne((type) => Product, (user) => user.ordersDetail)
   @JoinColumn({ name: 'product_id' })
   product: Product;
@@ -37,7 +43,17 @@ export class OrderDetail {
   @JoinColumn({ name: 'status_id' })
   status: OrderStatus;
 
+  @ManyToOne((type) => Size, (size) => size.ordersDetail)
+  @JoinColumn({ name: 'size_id' })
+  size: Size;
+
   @ManyToOne((type) => Order, (order) => order.orderDetails)
   @JoinColumn({ name: 'order_id' })
   order: Product;
+
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  updatedAt: Date;
 }

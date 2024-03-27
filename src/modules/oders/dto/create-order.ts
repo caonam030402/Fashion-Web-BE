@@ -6,12 +6,11 @@ export class CreateOrderDto {
   @IsNotEmpty()
   productId: string;
 
-  @ApiProperty({ example: 1 })
-  @IsNotEmpty()
-  userId: string;
-
   @IsNotEmpty()
   buy_count: number;
+
+  @IsNotEmpty()
+  sizeId: number;
 
   statusId: number;
 

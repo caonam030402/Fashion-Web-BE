@@ -26,10 +26,4 @@ export class Order {
   @ManyToOne((type) => User, (user) => user.orders)
   @JoinColumn({ name: 'user_id' })
   user: User;
-
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt: Date;
 }
