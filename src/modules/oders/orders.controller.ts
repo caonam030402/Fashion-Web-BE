@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -28,6 +29,12 @@ export class OrdersController {
   @Put(':id')
   updateOrder(@Body() body: UpdateOrderDto, @Param('id') id: string) {
     const res = this.ordersService.update(body, id);
+    return res;
+  }
+
+  @Delete(':id')
+  deleteOrder(@Param('id') id: string) {
+    const res = this.ordersService.delete(id);
     return res;
   }
 

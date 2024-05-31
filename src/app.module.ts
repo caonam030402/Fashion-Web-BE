@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ProductsModule } from './modules/products/products.module';
 import { JwtModule } from '@nestjs/jwt';
 import { OrdersModule } from './modules/oders/orders.module';
+import { DiscountsModule } from './modules/discounts/discounts.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { OrdersModule } from './modules/oders/orders.module';
       signOptions: { expiresIn: '60s' },
     }),
     OrdersModule,
+    DiscountsModule,
   ],
   controllers: [],
   providers: [],

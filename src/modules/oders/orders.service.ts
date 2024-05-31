@@ -134,15 +134,26 @@ export class OrdersService {
     }
 
     if (buy_count) {
-      updateData.buy_count = () => `buy_count + ${buy_count}`;
+      updateData.buy_count = buy_count;
     }
 
     const result = await this.orderDetailRepo.update({ id: id }, updateData);
 
     if (result.affected && result.affected > 0) {
-      const order = await this.orderDetailRepo.findOne({ where: { id: id } });
+      const order = await this.orderDetailRepo.findOne({
+        where: { id: id },
+        order: { createdAt: 'desc' },
+      });
       return successResponse('Update thành công', order);
     }
+  }
+
+  async delete(id: string) {
+    let updateData: any = {};
+
+    const result = await this.orderDetailRepo.delete({ id: id });
+
+    return successResponse('Xóa thành công', undefined);
   }
 
   async createStatus(dto) {

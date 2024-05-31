@@ -1,4 +1,4 @@
-version: '3'
+# version: '3'
 
 services:
   db:
@@ -14,18 +14,17 @@ services:
       - POSTGRES_USER=caonam
       - POSTGRES_PASSWORD=namnam
 
-  # adminer:
-  #   image: adminer
-  #   restart: always
-  #   ports:
-  #     - 8080:8080
-
-  pgadmin:
-    image: dpage/pgadmin4
+  adminer:
+    image: adminer
     restart: always
     ports:
-      - 5050:80
-    environment:
-      PGADMIN_DEFAULT_EMAIL: caonam@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: namnam
- 
+      - 8080:8080
+
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   restart: always
+  #   ports:
+  #     - 5050:80
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: caonam@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: namnam

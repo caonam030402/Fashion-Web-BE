@@ -1,3 +1,5 @@
+import { Discount } from 'src/modules/discounts/entities/discount.entity';
+import { UserDiscount } from 'src/modules/discounts/entities/user_discount.entity';
 import { OrderDetail } from 'src/modules/oders/entities/order-detail.entity';
 import { OrderStatus } from 'src/modules/oders/entities/order-status.entity';
 import { Order } from 'src/modules/oders/entities/order.entity';
@@ -33,6 +35,8 @@ const config: PostgresConnectionOptions = {
     OrderDetail,
     Order,
     OrderStatus,
+    Discount,
+    UserDiscount,
   ],
   synchronize: true,
 };

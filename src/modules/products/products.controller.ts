@@ -93,7 +93,7 @@ export class ProductsController {
   @Post('collection')
   @ApiBody({ type: [CreateCollection] })
   createCategories(@Body() dto: CreateCollection[]) {
-    const categories = this.productService.create(dto, FieldRepo.CATEGORY);
+    const categories = this.productService.create(dto, FieldRepo.COLLECTION);
     return categories;
   }
 

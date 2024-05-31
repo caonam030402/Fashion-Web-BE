@@ -11,6 +11,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { Order } from 'src/modules/oders/entities/order.entity';
+import { UserDiscount } from 'src/modules/discounts/entities/user_discount.entity';
 
 @Entity()
 export class User {
@@ -40,6 +41,9 @@ export class User {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @OneToMany((type) => UserDiscount, (discount) => discount.user)
+  discounts: UserDiscount[];
 
   @BeforeInsert()
   async hashPassword() {
